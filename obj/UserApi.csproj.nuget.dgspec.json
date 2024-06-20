@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/claudiobispo/Documents/UserApi/UserApi.csproj": {}
+    "/Users/claudiobispo/Documents/BackEnd/UserApi/UserApi.csproj": {}
   },
   "projects": {
-    "/Users/claudiobispo/Documents/UserApi/UserApi.csproj": {
+    "/Users/claudiobispo/Documents/BackEnd/UserApi/UserApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/claudiobispo/Documents/UserApi/UserApi.csproj",
+        "projectUniqueName": "/Users/claudiobispo/Documents/BackEnd/UserApi/UserApi.csproj",
         "projectName": "UserApi",
-        "projectPath": "/Users/claudiobispo/Documents/UserApi/UserApi.csproj",
+        "projectPath": "/Users/claudiobispo/Documents/BackEnd/UserApi/UserApi.csproj",
         "packagesPath": "/Users/claudiobispo/.nuget/packages/",
-        "outputPath": "/Users/claudiobispo/Documents/UserApi/obj/",
+        "outputPath": "/Users/claudiobispo/Documents/BackEnd/UserApi/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/claudiobispo/.nuget/NuGet/NuGet.Config"

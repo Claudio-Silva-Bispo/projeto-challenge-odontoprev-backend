@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "k0ZO5PZVAU8=",
+  "dgSpecHash": "HI+SZxNjqvg=",
   "success": true,
-  "projectFilePath": "/Users/claudiobispo/Documents/UserApi/UserApi.csproj",
+  "projectFilePath": "/Users/claudiobispo/Documents/BackEnd/UserApi/UserApi.csproj",
   "expectedPackageFiles": [
     "/Users/claudiobispo/.nuget/packages/awssdk.core/3.7.100.14/awssdk.core.3.7.100.14.nupkg.sha512",
     "/Users/claudiobispo/.nuget/packages/awssdk.securitytoken/3.7.100.14/awssdk.securitytoken.3.7.100.14.nupkg.sha512",

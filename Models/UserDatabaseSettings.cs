@@ -1,10 +1,15 @@
-namespace UserApi.Models;
-
-public class UserDatabaseSettings
+namespace UserApi.Models
 {
-    public string ConnectionString { get; set; } = null!;
+    public class UserDatabaseSettings
+    {
+        public string ConnectionString { get; set; } = null!;
 
-    public string DatabaseName { get; set; } = null!;
+        public string DatabaseName { get; set; } = null!;
 
-    public string UsersCollectionName { get; set; } = null!;
+        public string UsersCollectionName { get; set; } = null!;
+
+        public string CadastroCollectionName { get; set; } = null!;
+
+        public string LoginCollectionName { get; set; } = null!;
+    }
 }
