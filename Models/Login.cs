@@ -1,3 +1,4 @@
+// Models/Login.cs
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
@@ -15,6 +16,9 @@ namespace UserApi.Models
 
         [BsonElement("loginDate")]
         public DateTime LoginDate { get; set; }
+
+        [BsonElement("provider")]
+        public string Provider { get; set; } = string.Empty;
 
         [BsonIgnore]
         public string Data => ConvertToSaoPauloTime(LoginDate).ToString("yyyy-MM-dd");

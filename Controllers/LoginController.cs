@@ -23,5 +23,17 @@ namespace UserApi.Controllers
             var logins = await _userService.GetLoginsAsync();
             return Ok(logins);
         }
+
+        [HttpPost]
+        public async Task<ActionResult<Login>> Post(Login login)
+        {
+            if (login == null || string.IsNullOrEmpty(login.UserId) || string.IsNullOrEmpty(login.Provider))
+            {
+                return BadRequest("Invalid login data.");
+            }
+
+            await _userService.RecordLoginAsync(login);
+            return CreatedAtAction(nameof(Get), new { id = login.Id }, login);
+        }
     }
 }
