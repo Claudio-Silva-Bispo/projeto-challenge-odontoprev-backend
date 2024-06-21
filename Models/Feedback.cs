@@ -4,23 +4,29 @@ using System;
 
 namespace UserApi.Models
 {
-    public class Cadastro
+    public class Feedback
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
 
-        [BsonElement("nome")]
-        public string Nome { get; set; } = null!;
-
         [BsonElement("dataHora")]
         public DateTime DataHora { get; set; }
 
-        [BsonElement("email")]
-        public string Email { get; set; } = null!;
+        [BsonElement("nome")]
+        public string Nome { get; set; } = string.Empty;
 
-        [BsonElement("senha")]
-        public string Senha { get; set; } = null!;
+        [BsonElement("email")]
+        public string Email { get; set; } = string.Empty;
+
+        [BsonElement("telefone")]
+        public string Telefone { get; set; } = string.Empty;
+
+        [BsonElement("nota")]
+        public int Nota { get; set; }
+
+        [BsonElement("descricao")]
+        public string Descricao { get; set; } = string.Empty;
 
         [BsonIgnore]
         public string Data => ConvertToSaoPauloTime(DataHora).ToString("yyyy-MM-dd");

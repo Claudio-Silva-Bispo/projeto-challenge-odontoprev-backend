@@ -11,5 +11,7 @@ namespace UserApi.Models
         public string CadastroCollectionName { get; set; } = null!;
 
         public string LoginCollectionName { get; set; } = null!;
+
+        public string FeedbackCollectionName { get; set; } = null!;
     }
 }

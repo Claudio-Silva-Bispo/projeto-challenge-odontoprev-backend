@@ -1,6 +1,9 @@
 using UserApi.Models;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace UserApi.Services
 {
@@ -9,6 +12,7 @@ namespace UserApi.Services
         private readonly IMongoCollection<Usuario> _userCollection;
         private readonly IMongoCollection<Cadastro> _cadastroCollection;
         private readonly IMongoCollection<Login> _loginCollection;
+        private readonly IMongoCollection<Feedback> _feedbackCollection;
 
         public UserService(IOptions<UserDatabaseSettings> userDatabaseSettings)
         {
@@ -18,6 +22,7 @@ namespace UserApi.Services
             _userCollection = database.GetCollection<Usuario>(userDatabaseSettings.Value.UsersCollectionName);
             _cadastroCollection = database.GetCollection<Cadastro>(userDatabaseSettings.Value.CadastroCollectionName);
             _loginCollection = database.GetCollection<Login>(userDatabaseSettings.Value.LoginCollectionName);
+            _feedbackCollection = database.GetCollection<Feedback>(userDatabaseSettings.Value.FeedbackCollectionName);
         }
 
         public async Task<List<Usuario>> GetAsync() =>
@@ -36,15 +41,18 @@ namespace UserApi.Services
             await _userCollection.InsertOneAsync(usuario);
 
             newUser.Id = usuario.Id; // Relaciona o ID do usuário com o cadastro
-            newUser.DataHora = DateTime.UtcNow;
+            newUser.DataHora = ConvertToSaoPauloTime(DateTime.UtcNow);
             await _cadastroCollection.InsertOneAsync(newUser);
         }
 
         public async Task<Cadastro?> GetCadastroAsync(string email, string senha) =>
             await _cadastroCollection.Find(c => c.Email == email && c.Senha == senha).FirstOrDefaultAsync();
 
-        public async Task RecordLoginAsync(Login login) =>
+        public async Task RecordLoginAsync(Login login)
+        {
+            login.LoginDate = ConvertToSaoPauloTime(DateTime.UtcNow);
             await _loginCollection.InsertOneAsync(login);
+        }
 
         public async Task UpdateAsync(string id, Usuario updatedUser) =>
             await _userCollection.ReplaceOneAsync(x => x.Id == id, updatedUser);
@@ -53,6 +61,31 @@ namespace UserApi.Services
         {
             await _userCollection.DeleteOneAsync(x => x.Id == id);
             await _cadastroCollection.DeleteOneAsync(x => x.Id == id);
+        }
+
+        // Método para buscar todos os cadastros
+        public async Task<List<Cadastro>> GetCadastrosAsync() =>
+            await _cadastroCollection.Find(_ => true).ToListAsync();
+
+        // Método para buscar todos os logins
+        public async Task<List<Login>> GetLoginsAsync() =>
+            await _loginCollection.Find(_ => true).ToListAsync();
+
+        // Método para buscar todos os feedbacks
+        public async Task<List<Feedback>> GetFeedbacksAsync() =>
+            await _feedbackCollection.Find(_ => true).ToListAsync();
+
+        // Método para criar um novo feedback
+        public async Task CreateFeedbackAsync(Feedback newFeedback)
+        {
+            newFeedback.DataHora = ConvertToSaoPauloTime(DateTime.UtcNow);
+            await _feedbackCollection.InsertOneAsync(newFeedback);
+        }
+
+        private DateTime ConvertToSaoPauloTime(DateTime utcDateTime)
+        {
+            TimeZoneInfo saoPauloTimeZone = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time");
+            return TimeZoneInfo.ConvertTimeFromUtc(utcDateTime, saoPauloTimeZone);
         }
     }
 }
