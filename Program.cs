@@ -1,14 +1,69 @@
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using MongoDB.Driver;
 using UserApi.Models;
 using UserApi.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using UserApi.Servicos;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Adiciona serviços ao contêiner.
+// Configuração do MongoDB
 builder.Services.Configure<UserDatabaseSettings>(builder.Configuration.GetSection("UserDatabaseSettings"));
-builder.Services.AddSingleton<UserService>();
-builder.Services.AddLogging(); // Adiciona suporte para logging
-builder.Services.AddControllers(); // Adiciona os controladores ao contêiner de serviços
+
+builder.Services.AddSingleton<IMongoClient>(sp =>   
+{
+    var settings = sp.GetRequiredService<IOptions<UserDatabaseSettings>>().Value;
+    return new MongoClient(settings.ConnectionString);
+});
+
+// Registrar os serviços necessários
+
+// Cadastro do usuário pelo formulário de cadastro
+builder.Services.AddSingleton<ICadastroService, CadastroService>();
+
+// Criar uma tabela única de usuário só com nome, email e senha, sem os demais dados.
+builder.Services.AddSingleton<UsuarioService>();
+
+// Personalizar background e fontes, salvar a definição do usuário
+builder.Services.AddSingleton<PersonalizacaoUsuarioService>();
+
+// Formulário de feedback
+builder.Services.AddSingleton<FeedbackService>();
+
+// Formulário de contato
+builder.Services.AddSingleton<ContatoService>();
+
+// Autenticação de Credenciais
+builder.Services.AddSingleton<IAutenticacaoLoginService, AutenticacaoLoginService>();
+
+// Armazenar logins realizados pelo usuário
+builder.Services.AddSingleton<LogLoginService>();
+
+// Adicionar configuração de autenticação JWT
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        var jwtKey = builder.Configuration["Jwt:Key"];
+        if (string.IsNullOrEmpty(jwtKey))
+        {
+            throw new ArgumentNullException("JWT Key not found in configuration.");
+        }
+
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtKey))
+        };
+    });
+
+builder.Services.AddLogging();
+builder.Services.AddControllers();
 
 // Adicionar configuração de CORS
 builder.Services.AddCors(options =>
@@ -45,6 +100,7 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+
 builder.WebHost.ConfigureKestrel(options =>
 {
     options.ListenAnyIP(3001); // Escolha uma porta diferente que não esteja em uso
@@ -52,14 +108,14 @@ builder.WebHost.ConfigureKestrel(options =>
 
 var app = builder.Build();
 
-// Testa a conexão ao MongoDB
+// Testa a conexão ao MongoDB usando UsuarioService
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    var userService = services.GetRequiredService<UserService>();
+    var usuarioService = services.GetRequiredService<UsuarioService>();
     try
     {
-        var users = await userService.GetAsync();
+        var users = await usuarioService.GetAll();
         Console.WriteLine($"Conexão ao MongoDB estabelecida com sucesso. {users.Count} usuários encontrados.");
     }
     catch (Exception ex)
@@ -78,11 +134,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseAuthorization(); // Adiciona suporte para autorização (se necessário).
-
-// Adicionar o middleware de CORS
+app.UseAuthentication(); // Certifique-se de adicionar UseAuthentication antes de UseAuthorization
+app.UseAuthorization();
 app.UseCors("AllowAllOrigins");
-
-app.MapControllers();  // Mapeia as rotas dos controladores
-
-app.Run(); // Inicia o aplicativo
+app.MapControllers();
+app.Run();

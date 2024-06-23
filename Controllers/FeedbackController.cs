@@ -1,8 +1,8 @@
+using UserApi.Models;
+using UserApi.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using UserApi.Models;
-using UserApi.Services;
 
 namespace UserApi.Controllers
 {
@@ -10,33 +10,25 @@ namespace UserApi.Controllers
     [Route("api/[controller]")]
     public class FeedbackController : ControllerBase
     {
-        private readonly UserService _userService;
+        private readonly FeedbackService _feedbackService;
 
-        public FeedbackController(UserService userService)
-        {
-            _userService = userService;
-        }
+        public FeedbackController(FeedbackService feedbackService) =>
+            _feedbackService = feedbackService;
 
         [HttpGet]
-        public async Task<ActionResult<List<Feedback>>> Get()
-        {
-            var feedbacks = await _userService.GetFeedbacksAsync();
-            return Ok(feedbacks);
-        }
+        public async Task<ActionResult<List<Feedback>>> Get() =>
+            Ok(await _feedbackService.GetFeedbacksAsync());
 
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] Feedback newFeedback)
         {
             if (newFeedback == null)
             {
-                return BadRequest("Feedback é nulo.");
+                return BadRequest("Feedback is null.");
             }
 
-            // Garante que o campo Id não está preenchido para permitir a geração automática
-            newFeedback.Id = null;
-            newFeedback.DataHora = DateTime.UtcNow; // Definir data e hora no servidor
+            await _feedbackService.CreateFeedbackAsync(newFeedback);
 
-            await _userService.CreateFeedbackAsync(newFeedback);
             return CreatedAtAction(nameof(Get), new { id = newFeedback.Id }, newFeedback);
         }
     }

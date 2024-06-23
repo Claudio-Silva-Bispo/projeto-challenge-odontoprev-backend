@@ -11,5 +11,11 @@ namespace UserApi.Models
 
         [BsonElement("nome")]
         public string Nome { get; set; } = string.Empty;
+
+        [BsonElement("email")]
+        public string Email { get; set; } = string.Empty;
+
+        [BsonElement("senha")]
+        public string Senha { get; set; } = string.Empty;
     }
 }
