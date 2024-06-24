@@ -42,6 +42,17 @@ builder.Services.AddSingleton<IAutenticacaoLoginService, AutenticacaoLoginServic
 // Armazenar logins realizados pelo usuário
 builder.Services.AddSingleton<LogLoginService>();
 
+// Armazenar os dados dos visitantes
+
+builder.Services.AddSingleton<VisitanteAceiteService>();
+builder.Services.AddSingleton<VisitanteAnonimoService>();
+
+// Armazena a preferência de idioma do usuário
+builder.Services.AddSingleton<PreferenciaIdiomaService>();
+
+// Armazenar as perguntas dos visitantes/usuários
+builder.Services.AddSingleton<PesquisaService>();
+
 // Adicionar configuração de autenticação JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>

@@ -100,3 +100,4 @@
 /Users/claudiobispo/Documents/BackEnd/UserApi/bin/Debug/net8.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 /Users/claudiobispo/Documents/BackEnd/UserApi/bin/Debug/net8.0/Microsoft.IdentityModel.Tokens.dll
 /Users/claudiobispo/Documents/BackEnd/UserApi/bin/Debug/net8.0/System.IdentityModel.Tokens.Jwt.dll
+/Users/claudiobispo/Documents/BackEnd/UserApi/bin/Debug/net8.0/NodaTime.dll

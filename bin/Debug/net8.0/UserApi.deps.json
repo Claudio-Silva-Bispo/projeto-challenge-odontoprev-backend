@@ -12,6 +12,7 @@
           "Microsoft.AspNetCore.OpenApi": "8.0.6",
           "Microsoft.IdentityModel.Tokens": "7.6.2",
           "MongoDB.Driver": "2.26.0",
+          "NodaTime": "3.1.11",
           "Swashbuckle.AspNetCore": "6.6.2"
         },
         "runtime": {
@@ -219,6 +220,17 @@
             "rid": "win",
             "assetType": "native",
             "fileVersion": "0.0.0.0"
+          }
+        }
+      },
+      "NodaTime/3.1.11": {
+        "dependencies": {
+          "System.Runtime.CompilerServices.Unsafe": "5.0.0"
+        },
+        "runtime": {
+          "lib/net6.0/NodaTime.dll": {
+            "assemblyVersion": "3.1.11.0",
+            "fileVersion": "3.1.11.0"
           }
         }
       },
@@ -453,6 +465,13 @@
       "sha512": "sha512-5uMtRXwy2NkSRWVQUkkdtq8BsRiHbE6eX8vX52NtMvDC/T4VTtHZLQb8ogW+mw0WSvM1IIUvz3Gl1iMJmT8HKQ==",
       "path": "mongodb.libmongocrypt/1.9.0",
       "hashPath": "mongodb.libmongocrypt.1.9.0.nupkg.sha512"
+    },
+    "NodaTime/3.1.11": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-AYSiCHp1PLzWKVf7hEL3MJ0q9kzOWMNIaTVysXk4XKrDBzK5PF2wpd4LsAl+EIQ2Hbvu+vw4oFaexcXzCuY1lQ==",
+      "path": "nodatime/3.1.11",
+      "hashPath": "nodatime.3.1.11.nupkg.sha512"
     },
     "SharpCompress/0.30.1": {
       "type": "package",
