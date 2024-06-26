@@ -20,7 +20,7 @@ namespace UserApi.Models
         public string TempoPermanencia { get; set; } = null!;
 
         [BsonElement("elementos_clicados")]
-        public List<ElementoClicadoAnonimo> ElementosClicados { get; set; } = new List<ElementoClicadoAnonimo>();
+        public string ElementosClicados { get; set; } = null!;
 
         [BsonElement("tipo_navegador")]
         public string TipoNavegador { get; set; } = null!;
@@ -33,23 +33,9 @@ namespace UserApi.Models
 
         [BsonElement("sistema_operacional")]
         public string SistemaOperacional { get; set; } = null!;
+
+        [BsonElement("data_hora_sessao")]
+        public string DataHoraSessao { get; set; } = null!; 
     }
 
-    public class ElementoClicadoAnonimo
-    {
-        [BsonElement("elemento")]
-        public string Elemento { get; set; } = null!;
-
-        [BsonElement("posicao_clique")]
-        public PosicaoAnonimo PosicaoClique { get; set; } = new PosicaoAnonimo();
-    }
-
-    public class PosicaoAnonimo
-    {
-        [BsonElement("x")]
-        public string X { get; set; } = null!;
-
-        [BsonElement("y")]
-        public string Y { get; set; } = null!;
-    }
 }
