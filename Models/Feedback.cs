@@ -8,36 +8,22 @@ namespace UserApi.Models
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string? Id { get; set; }
+        public string? id_feedback { get; set; }
 
-        [BsonElement("dataHora")]
-        public DateTime DataHora { get; set; }
+        [BsonElement("id_cliente")]
+        public string id_cliente { get; set; } = string.Empty;
 
-        [BsonElement("nome")]
-        public string Nome { get; set; } = string.Empty;
+        [BsonElement("id_dentista")]
+        public string id_dentista { get; set; } = string.Empty;
 
-        [BsonElement("email")]
-        public string Email { get; set; } = string.Empty;
-
-        [BsonElement("telefone")]
-        public string Telefone { get; set; } = string.Empty;
+        [BsonElement("id_clinica")]
+        public string id_clinica { get; set; } = string.Empty;
 
         [BsonElement("nota")]
         public int Nota { get; set; }
 
-        [BsonElement("descricao")]
-        public string Descricao { get; set; } = string.Empty;
+        [BsonElement("comentario")]
+        public string comentario { get; set; } = string.Empty;
 
-        [BsonIgnore]
-        public string Data => ConvertToSaoPauloTime(DataHora).ToString("yyyy-MM-dd");
-
-        [BsonIgnore]
-        public string Hora => ConvertToSaoPauloTime(DataHora).ToString("HH:mm:ss");
-
-        private DateTime ConvertToSaoPauloTime(DateTime utcDateTime)
-        {
-            TimeZoneInfo saoPauloTimeZone = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time");
-            return TimeZoneInfo.ConvertTimeFromUtc(utcDateTime, saoPauloTimeZone);
-        }
     }
 }

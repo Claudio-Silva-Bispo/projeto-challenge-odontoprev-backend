@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "4KmtEPaxNzA=",
+  "dgSpecHash": "cz6yG+g86P0=",
   "success": true,
-  "projectFilePath": "/Users/claudiobispo/Documents/BackEnd/UserApi/UserApi.csproj",
+  "projectFilePath": "/Users/claudiobispo/Documents/project-backend-challenge-odontoprev/UserApi.csproj",
   "expectedPackageFiles": [
     "/Users/claudiobispo/.nuget/packages/awssdk.core/3.7.100.14/awssdk.core.3.7.100.14.nupkg.sha512",
     "/Users/claudiobispo/.nuget/packages/awssdk.securitytoken/3.7.100.14/awssdk.securitytoken.3.7.100.14.nupkg.sha512",

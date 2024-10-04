@@ -6,7 +6,6 @@ using UserApi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using UserApi.Servicos;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,16 +24,10 @@ builder.Services.AddSingleton<IMongoClient>(sp =>
 builder.Services.AddSingleton<ICadastroService, CadastroService>();
 
 // Criar uma tabela única de usuário só com nome, email e senha, sem os demais dados.
-builder.Services.AddSingleton<UsuarioService>();
-
-// Personalizar background e fontes, salvar a definição do usuário
-builder.Services.AddSingleton<PersonalizacaoUsuarioService>();
+builder.Services.AddSingleton<IClienteService, ClienteService>();
 
 // Formulário de feedback
-builder.Services.AddSingleton<FeedbackService>();
-
-// Formulário de contato
-builder.Services.AddSingleton<ContatoService>();
+builder.Services.AddSingleton<IFeedbackService, FeedbackService>();
 
 // Autenticação de Credenciais
 builder.Services.AddSingleton<IAutenticacaoLoginService, AutenticacaoLoginService>();
@@ -42,16 +35,16 @@ builder.Services.AddSingleton<IAutenticacaoLoginService, AutenticacaoLoginServic
 // Armazenar logins realizados pelo usuário
 builder.Services.AddSingleton<LogLoginService>();
 
-// Armazenar os dados dos visitantes
-
-builder.Services.AddSingleton<VisitanteAceiteService>();
-builder.Services.AddSingleton<VisitanteAnonimoService>();
-
-// Armazena a preferência de idioma do usuário
-builder.Services.AddSingleton<PreferenciaIdiomaService>();
-
-// Armazenar as perguntas dos visitantes/usuários
-builder.Services.AddSingleton<PesquisaService>();
+// Serviços adicionais
+builder.Services.AddSingleton<IAgendaService, AgendaService>();
+builder.Services.AddSingleton<IClinicaService, ClinicaService>();
+builder.Services.AddSingleton<IConsultaService, ConsultaService>();
+builder.Services.AddSingleton<IDentistaService, DentistaService>();
+builder.Services.AddSingleton<IEstadoCivilService, EstadoCivilService>();
+builder.Services.AddSingleton<IFormularioDetalhadoService, FormularioDetalhadoService>();
+builder.Services.AddSingleton<INotificacoesService, NotificacoesService>();
+builder.Services.AddSingleton<ITipoNotificacaoService, TipoNotificacaoService>();
+builder.Services.AddSingleton<ISinistroService, SinistroService>();
 
 // Adicionar configuração de autenticação JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -96,21 +89,20 @@ builder.Services.AddSwaggerGen(c =>
     { 
         Title = "Minha API", 
         Version = "v1",
-        Description = "API para cadastro de usuário no banco do MongoDB",
+        Description = "API para projeto do Challenge da OdontoPrev",
         Contact = new OpenApiContact
         {
-            Name = "Claudio Silva Bispo",
-            Email = "claudio_cssp@hotmail.com",
-            Url = new Uri("https://seu-website.com")
+            Name = "Claudio Silva Bispo e Patricia Naomi",
+            Email = "rm553472@fiap.com.br e rm552981@fiap.com.br",
+            Url = new Uri("https://github.com/Claudio-Silva-Bispo")
         },
         License = new OpenApiLicense
         {
-            Name = "Use sob LICX",
-            Url = new Uri("https://example.com/license")
+            Name = "Delfos Machine Group",
+            Url = new Uri("https://github.com/Claudio-Silva-Bispo")
         }
     });
 });
-
 
 builder.WebHost.ConfigureKestrel(options =>
 {
@@ -123,7 +115,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    var usuarioService = services.GetRequiredService<UsuarioService>();
+    var usuarioService = services.GetRequiredService<IClienteService>();
     try
     {
         var users = await usuarioService.GetAll();

@@ -1,6 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using UserApi.Models;
 using UserApi.Services;
 
@@ -41,8 +39,7 @@ namespace UserApi.Controllers
         public async Task<ActionResult<Cadastro>> Create(Cadastro cadastro)
         {
             await _cadastroService.Create(cadastro);
-
-            return CreatedAtRoute("GetCadastro", new { id = cadastro.Id }, cadastro);
+            return CreatedAtRoute("GetCadastro", new { id = cadastro.id_cliente }, cadastro);
         }
 
         [HttpPut("{id:length(24)}")]
@@ -56,7 +53,6 @@ namespace UserApi.Controllers
             }
 
             await _cadastroService.Update(id, cadastro);
-
             return NoContent();
         }
 
@@ -71,7 +67,6 @@ namespace UserApi.Controllers
             }
 
             await _cadastroService.Delete(id);
-
             return NoContent();
         }
     }

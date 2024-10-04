@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using UserApi.Servicos;
+using UserApi.Services;
 using UserApi.Models;
 
 namespace UserApi.Controladores

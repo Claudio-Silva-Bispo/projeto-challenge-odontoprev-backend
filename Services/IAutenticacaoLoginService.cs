@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace UserApi.Servicos
+namespace UserApi.Services
 {
     public interface IAutenticacaoLoginService
     {

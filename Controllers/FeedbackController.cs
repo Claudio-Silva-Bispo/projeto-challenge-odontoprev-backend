@@ -1,6 +1,6 @@
+using Microsoft.AspNetCore.Mvc;
 using UserApi.Models;
 using UserApi.Services;
-using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -10,26 +10,66 @@ namespace UserApi.Controllers
     [Route("api/[controller]")]
     public class FeedbackController : ControllerBase
     {
-        private readonly FeedbackService _feedbackService;
+        private readonly IFeedbackService _feedbackService;
 
-        public FeedbackController(FeedbackService feedbackService) =>
+        public FeedbackController(IFeedbackService feedbackService)
+        {
             _feedbackService = feedbackService;
+        }
 
         [HttpGet]
-        public async Task<ActionResult<List<Feedback>>> Get() =>
-            Ok(await _feedbackService.GetFeedbacksAsync());
-
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Feedback newFeedback)
+        public async Task<ActionResult<List<Feedback>>> GetAll()
         {
-            if (newFeedback == null)
+            var feedbacks = await _feedbackService.GetAll();
+            return Ok(feedbacks);
+        }
+
+        [HttpGet("{id:length(24)}", Name = "GetFeedback")]
+        public async Task<ActionResult<Feedback>> GetById(string id)
+        {
+            var feedback = await _feedbackService.GetById(id);
+
+            if (feedback == null)
             {
-                return BadRequest("Feedback is null.");
+                return NotFound();
             }
 
-            await _feedbackService.CreateFeedbackAsync(newFeedback);
+            return Ok(feedback);
+        }
 
-            return CreatedAtAction(nameof(Get), new { id = newFeedback.Id }, newFeedback);
+        [HttpPost]
+        public async Task<ActionResult<Feedback>> Create(Feedback feedback)
+        {
+            await _feedbackService.Create(feedback);
+            return CreatedAtRoute("GetFeedback", new { id = feedback.id_feedback }, feedback);
+        }
+
+        [HttpPut("{id:length(24)}")]
+        public async Task<IActionResult> Update(string id, Feedback feedback)
+        {
+            var existingFeedback = await _feedbackService.GetById(id);
+
+            if (existingFeedback == null)
+            {
+                return NotFound();
+            }
+
+            await _feedbackService.Update(id, feedback);
+            return NoContent();
+        }
+
+        [HttpDelete("{id:length(24)}")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            var existingFeedback = await _feedbackService.GetById(id);
+
+            if (existingFeedback == null)
+            {
+                return NotFound();
+            }
+
+            await _feedbackService.Delete(id);
+            return NoContent();
         }
     }
 }

@@ -1600,11 +1600,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/claudiobispo/Documents/BackEnd/UserApi/UserApi.csproj",
+      "projectUniqueName": "/Users/claudiobispo/Documents/project-backend-challenge-odontoprev/UserApi.csproj",
       "projectName": "UserApi",
-      "projectPath": "/Users/claudiobispo/Documents/BackEnd/UserApi/UserApi.csproj",
+      "projectPath": "/Users/claudiobispo/Documents/project-backend-challenge-odontoprev/UserApi.csproj",
       "packagesPath": "/Users/claudiobispo/.nuget/packages/",
-      "outputPath": "/Users/claudiobispo/Documents/BackEnd/UserApi/obj/",
+      "outputPath": "/Users/claudiobispo/Documents/project-backend-challenge-odontoprev/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/claudiobispo/.nuget/NuGet/NuGet.Config"

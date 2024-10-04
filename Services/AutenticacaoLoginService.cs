@@ -9,11 +9,11 @@ using UserApi.Models;
 using System.Threading.Tasks;
 using UserApi.Services; // Adicione esta linha para garantir que o namespace correto está sendo usado
 
-namespace UserApi.Servicos
+namespace UserApi.Services
 {
     public class AutenticacaoLoginService : IAutenticacaoLoginService
     {
-        private readonly IMongoCollection<Usuario> _usuarioCollection;
+        private readonly IMongoCollection<Cliente> _clienteCollection;
         private readonly string _chaveJwt;
 
         // Registrar logs dos logins
@@ -22,16 +22,16 @@ namespace UserApi.Servicos
         public AutenticacaoLoginService(IMongoClient mongoClient, IConfiguration configuracao, LogLoginService logLoginService)
         {
             var database = mongoClient.GetDatabase(configuracao["UserDatabaseSettings:DatabaseName"]);
-            _usuarioCollection = database.GetCollection<Usuario>(configuracao["UserDatabaseSettings:UsersCollectionName"]);
+            _clienteCollection = database.GetCollection<Cliente>(configuracao["UserDatabaseSettings:ClienteCollectionName"]);
             _chaveJwt = configuracao.GetValue<string>("Jwt:Key") ?? throw new ArgumentNullException("Jwt:Key não encontrada na configuração.");
             _logLoginService = logLoginService;
         }
 
         public async Task<string?> Autenticar(string email, string senha, string tipoLogin)
         {
-            var usuario = await _usuarioCollection.Find(u => u.Email == email && u.Senha == senha).FirstOrDefaultAsync();
+            var cliente = await _clienteCollection.Find(u => u.email == email && u.senha == senha).FirstOrDefaultAsync();
 
-            if (usuario == null)
+            if (cliente == null)
                 return null;
 
             // Registrar o log de login
@@ -41,7 +41,7 @@ namespace UserApi.Servicos
             var chave = Encoding.ASCII.GetBytes(_chaveJwt);
             var descricaoToken = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[] { new Claim("id", usuario.Id), new Claim("email", usuario.Email) }),
+                Subject = new ClaimsIdentity(new[] { new Claim("id_cliente", cliente.id_cliente), new Claim("email", cliente.email) }),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(chave), SecurityAlgorithms.HmacSha256Signature)
             };
