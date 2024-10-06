@@ -1,50 +1,65 @@
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using MongoDB.Driver;
-using UserApi.Models;
-using UserApi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using UserApi.Domain;
+using UserApi.Application.Services;
+using UserApi.Domain.Repositories;
+using MongoDB.Bson;
+using UserApi.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Configuração do MongoDB
-builder.Services.Configure<UserDatabaseSettings>(builder.Configuration.GetSection("UserDatabaseSettings"));
+builder.Services.Configure<ConfiguraracaoMongoDb>(builder.Configuration.GetSection("ConfiguraracaoMongoDb"));
 
+// Registra o cliente MongoDB como singleton
 builder.Services.AddSingleton<IMongoClient>(sp =>   
 {
-    var settings = sp.GetRequiredService<IOptions<UserDatabaseSettings>>().Value;
+    var settings = sp.GetRequiredService<IOptions<ConfiguraracaoMongoDb>>().Value;
     return new MongoClient(settings.ConnectionString);
 });
 
 // Registrar os serviços necessários
 
-// Cadastro do usuário pelo formulário de cadastro
+//Cadastro
 builder.Services.AddSingleton<ICadastroService, CadastroService>();
+builder.Services.AddSingleton<ICadastroRepository, CadastroRepository>();
 
-// Criar uma tabela única de usuário só com nome, email e senha, sem os demais dados.
+// Cliente
 builder.Services.AddSingleton<IClienteService, ClienteService>();
+builder.Services.AddSingleton<IClienteRepository, ClienteRepository>();
 
-// Formulário de feedback
-builder.Services.AddSingleton<IFeedbackService, FeedbackService>();
-
-// Autenticação de Credenciais
-builder.Services.AddSingleton<IAutenticacaoLoginService, AutenticacaoLoginService>();
-
-// Armazenar logins realizados pelo usuário
-builder.Services.AddSingleton<LogLoginService>();
-
-// Serviços adicionais
+// Agenda
 builder.Services.AddSingleton<IAgendaService, AgendaService>();
+builder.Services.AddSingleton<IAgendaRepository, AgendaRepository>();
+
+// Clinica
 builder.Services.AddSingleton<IClinicaService, ClinicaService>();
-builder.Services.AddSingleton<IConsultaService, ConsultaService>();
+builder.Services.AddSingleton<IClinicaRepository, ClinicaRepository>();
+
+// Dentista
 builder.Services.AddSingleton<IDentistaService, DentistaService>();
+builder.Services.AddSingleton<IDentistaRepository, DentistaRepository>();
+
+// Consulta
+builder.Services.AddSingleton<IConsultaService, ConsultaService>();
+builder.Services.AddSingleton<IConsultaRepository, ConsultaRepository>();
+
+// Estado Civil
 builder.Services.AddSingleton<IEstadoCivilService, EstadoCivilService>();
-builder.Services.AddSingleton<IFormularioDetalhadoService, FormularioDetalhadoService>();
-builder.Services.AddSingleton<INotificacoesService, NotificacoesService>();
+builder.Services.AddSingleton<IEstadoCivilRepository, EstadoCivilRepository>();
+
+// Tipo Notificação
 builder.Services.AddSingleton<ITipoNotificacaoService, TipoNotificacaoService>();
-builder.Services.AddSingleton<ISinistroService, SinistroService>();
+builder.Services.AddSingleton<ITipoNotificacaoRepository, TipoNotificacaoRepository>();
+
+// Feedback
+builder.Services.AddSingleton<IFeedbackService, FeedbackService>();
+builder.Services.AddSingleton<IFeedbackRepository, FeedbackRepository>();
+
 
 // Adicionar configuração de autenticação JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -89,11 +104,11 @@ builder.Services.AddSwaggerGen(c =>
     { 
         Title = "Minha API", 
         Version = "v1",
-        Description = "API para projeto do Challenge da OdontoPrev",
+        Description = "Esta é uma API desenvolvida para o projeto do Challenge da OdontoPrev. O sistema permite o cadastro e gerenciamento de usuários com autenticação baseada em JWT. Para mais informações, você pode acessar o vídeo da aplicação [aqui](https://link-do-video.com). Definição do projeto: Será criado uma aplicação que vai realizar sugestão de consultas ao cliente por meio de uma agenda eletrônica que vai se basear em três pilares, sendo 1. Local de preferência do cliente, 2. Qualidade (avaliando as pesquisas de satisfação e 3. Baixo custo.)",
         Contact = new OpenApiContact
         {
             Name = "Claudio Silva Bispo e Patricia Naomi",
-            Email = "rm553472@fiap.com.br e rm552981@fiap.com.br",
+            Email = "rm553472@fiap.com.br, rm552981@fiap.com.br",
             Url = new Uri("https://github.com/Claudio-Silva-Bispo")
         },
         License = new OpenApiLicense
@@ -111,15 +126,20 @@ builder.WebHost.ConfigureKestrel(options =>
 
 var app = builder.Build();
 
-// Testa a conexão ao MongoDB usando UsuarioService
+// Testa a conexão ao MongoDB
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    var usuarioService = services.GetRequiredService<IClienteService>();
+    var mongoClient = services.GetRequiredService<IMongoClient>();
     try
     {
-        var users = await usuarioService.GetAll();
-        Console.WriteLine($"Conexão ao MongoDB estabelecida com sucesso. {users.Count} usuários encontrados.");
+        // Aqui você pode realizar uma operação simples para verificar a conexão
+        var settings = services.GetRequiredService<IOptions<ConfiguraracaoMongoDb>>().Value;
+        var database = mongoClient.GetDatabase(settings.DatabaseName); // Usando o nome do banco configurado
+        var collection = database.GetCollection<BsonDocument>("test"); // Substitua "test" pelo nome de uma coleção existente
+        var documentCount = await collection.CountDocumentsAsync(new BsonDocument());
+        
+        Console.WriteLine($"Conexão ao MongoDB estabelecida com sucesso. {documentCount} documentos encontrados na coleção.");
     }
     catch (Exception ex)
     {
@@ -128,7 +148,7 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-// Configura o pipeline de requisições HTTP.
+// Configura o pipeline de requisições HTTP
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
