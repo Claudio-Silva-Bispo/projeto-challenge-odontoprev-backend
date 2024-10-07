@@ -1,5 +1,17 @@
 # Projeto Backend Challenge Odontoprev
 
+## Dados dos alunos
+
+1. Claudio Silva Bispo
+```bash
+    RM 553472
+```
+
+2. Patricia Naomi Yamagishi
+```bash
+    RM 552981
+```
+
 ## Visão Geral
 
 Este projeto é uma API para gerenciamento de  clientes, clínicas, consultas, feedback e outros recursos relacionados a um sistema odontológico. A API é construída usando ASP.NET Core e MongoDB para armazenamento de dados. Na segunda fase, iremos usar Oracle, pois nosso acesso está bloqueado.
