@@ -41,10 +41,9 @@ namespace UserApi.Application.Services
             var existingFeedback = await _feedbackRepository.GetById(feedback.IdFeedback);
             if (existingFeedback == null)
             {
-                throw new Exception("Dentista não encontrada");
+                throw new Exception("Agenda não encontrada");
             }
 
-            // Atualiza a agenda
             await _feedbackRepository.Update(feedback.Id, feedback); 
             return feedback; 
         }

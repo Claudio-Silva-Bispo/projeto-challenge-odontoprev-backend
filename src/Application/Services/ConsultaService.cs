@@ -41,10 +41,9 @@ namespace UserApi.Application.Services
             var existingConsulta = await _consultaRepository.GetById(consulta.IdConsulta);
             if (existingConsulta == null)
             {
-                throw new Exception("Dentista não encontrada");
+                throw new Exception("Consulta não encontrada");
             }
 
-            // Atualiza a agenda
             await _consultaRepository.Update(existingConsulta.Id, consulta); 
             return consulta; 
         }

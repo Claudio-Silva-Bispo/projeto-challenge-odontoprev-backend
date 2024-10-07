@@ -44,7 +44,6 @@ namespace UserApi.Application.Services
                 throw new Exception("Dentista não encontrada");
             }
 
-            // Atualiza a agenda
             await _dentistaRepository.Update(existingDentista.Id, dentista); 
             return dentista; 
         }

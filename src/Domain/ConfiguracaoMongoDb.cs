@@ -14,7 +14,7 @@ namespace UserApi.Domain
         public string EstadoCivilCollectionName { get; set; } = null!;
         public string FeedbackCollectionName { get; set; } = null!;
         public string FormularioDetalhadoCollectionName { get; set; } = null!;
-        public string NotificacoesCollectionName { get; set; } = null!;
+        public string NotificacaoCollectionName { get; set; } = null!;
         public string TipoNotificacaoCollectionName { get; set; } = null!;
         public string SinistroCollectionName { get; set; } = null!;
         public string LoginCollectionName { get; set; } = null!;

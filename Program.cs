@@ -60,6 +60,22 @@ builder.Services.AddSingleton<ITipoNotificacaoRepository, TipoNotificacaoReposit
 builder.Services.AddSingleton<IFeedbackService, FeedbackService>();
 builder.Services.AddSingleton<IFeedbackRepository, FeedbackRepository>();
 
+// Notificação
+builder.Services.AddSingleton<INotificacaoService, NotificacaoService>();
+builder.Services.AddSingleton<INotificacaoRepository, NotificacaoRepository>();
+
+// Formulário Detalhado
+builder.Services.AddSingleton<IFormularioDetalhadoService, FormularioDetalhadoService>();
+builder.Services.AddSingleton<IFormularioDetalhadoRepository, FormularioDetalhadoRepository>();
+
+// Sinistro
+builder.Services.AddSingleton<ISinistroService, SinistroService>();
+builder.Services.AddSingleton<ISinistroRepository, SinistroRepository>();
+
+// Logs Logins efetuados
+builder.Services.AddSingleton<ILoginService, LoginService>();
+builder.Services.AddSingleton<ILoginRepository, LoginRepository>();
+
 
 // Adicionar configuração de autenticação JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

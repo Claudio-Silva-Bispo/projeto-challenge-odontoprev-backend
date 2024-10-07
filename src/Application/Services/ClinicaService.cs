@@ -44,7 +44,6 @@ namespace UserApi.Application.Services
                 throw new Exception("Clinica não encontrada");
             }
 
-            // Atualiza a agenda
             await _clinicaRepository.Update(existingClinica.Id, clinica); 
             return clinica; 
         }

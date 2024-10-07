@@ -41,10 +41,9 @@ namespace UserApi.Application.Services
             var existingTipoNotificacao = await _tipoNotificacaoRepository.GetById(tipoNotificacao.IdTipoNotificacao);
             if (existingTipoNotificacao == null)
             {
-                throw new Exception("Dentista não encontrada");
+                throw new Exception("Tipo de Notificação não encontrada");
             }
 
-            // Atualiza a agenda
             await _tipoNotificacaoRepository.Update(existingTipoNotificacao.Id, tipoNotificacao); 
             return tipoNotificacao; 
         }
